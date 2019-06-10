@@ -3,7 +3,7 @@
 There are two stages in parsing json: 
   1. lexical analysis (breaking down input string into tokens)
       * recognize certain character such as: `{`, `}`, `[`, `]`, `,`
-      * look go for json string (surrounded by `"`)
+      * look for json string (surrounded by `"`)
       * for example: 
         * input string: `{"hello": ["world"]}` 
         * consists of the following tokens: `{`, `hello`, `:`, `[`, `world`, `]`, `}`
