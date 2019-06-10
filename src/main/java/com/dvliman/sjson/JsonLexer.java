@@ -3,6 +3,7 @@ package com.dvliman.sjson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JsonLexer {
     static JsonToken jsonString(String input) {

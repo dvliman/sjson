@@ -19,6 +19,10 @@ public class JsonToken {
         this.remaining = remaining;
     }
 
+    public boolean matchCharacter(char c) {
+        return this.value.equals(c);
+    }
+
     public String toString() {
         return this.value.toString();
 //        return String.format("JsonToken(type = %s, value = %s, rest = %s)\n",
