@@ -84,6 +84,12 @@ public class JsonTest {
         JsonParser.parseJson(JsonLexer.tokens(json));
     }
 
+    @Test(expected = Exception.class)
+    public void testInvalidJsonObjectKey() throws Exception {
+        String json = "{1 :\"world\"}"; // expecting colon
+        JsonParser.parseJson(JsonLexer.tokens(json));
+    }
+
     static List<String> tokenStrings(String input)  {
         try {
             return JsonLexer.tokens(input)

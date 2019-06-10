@@ -9,15 +9,14 @@ public class JsonLexer {
     static JsonToken jsonString(String input) {
         String jsonString = "";
 
-        if (input.charAt(0) != JsonToken.JSON_QUOTE) {
+        if (input.charAt(0) != JsonToken.JSON_QUOTE)
             return null;
-        }
 
         input = input.substring(1); // remove first quote
         for (char c: input.toCharArray()) {
             if (c == JsonToken.JSON_QUOTE) {
                 String remaining = input.substring(jsonString.length() + 1);
-                return new JsonToken(String.class, jsonString, remaining);
+                return new JsonToken(jsonString, remaining);
             }
             jsonString += c;
         }
@@ -39,30 +38,24 @@ public class JsonLexer {
         if (jsonNumber == "")
             return null;
 
-        String remaining = input.substring(jsonNumber.length());
-
-        return new JsonToken(Integer.class,
+        return new JsonToken(
             Integer.parseInt(jsonNumber),
-            remaining);
+            input.substring(jsonNumber.length()));
     }
 
-    static int trueLength  = "true".length();
-    static int falseLength = "false".length();
-    static int nullLength  = "null".length();
-
     static JsonToken jsonBoolean(String input) {
-        if (input.length() >= trueLength && input.substring(0, trueLength) == "true")
-            return new JsonToken(Boolean.class, true, input.substring(trueLength));
+        if (input == "true")
+            return new JsonToken(true, input.substring(input.length()));
 
-        if (input.length() >= falseLength && input.substring(0, falseLength) == "false")
-            return new JsonToken(Boolean.class, false, input.substring(falseLength));
+        if (input == "false")
+            return new JsonToken(false, input.substring(input.length()));
 
         return null;
     }
 
     static JsonToken jsonNull(String input) {
-        if (input.length() >= nullLength && input.substring(0, nullLength) == "null")
-            return new JsonToken(Object.class, null, input.substring(nullLength));
+        if (input == "null")
+            return new JsonToken(null, input.substring(input.length()));
 
         return null;
     }
@@ -71,7 +64,6 @@ public class JsonLexer {
         ArrayList<JsonToken> tokens = new ArrayList();
 
         while (input.length() > 0) {
-
             JsonToken t1 = jsonString(input);
             if (t1 != null) {
                 tokens.add(t1);
@@ -106,7 +98,7 @@ public class JsonLexer {
                 input = input.substring(1);
 
             } else if (isJsonSyntax(c)) {
-                tokens.add(new JsonToken(Character.class, c, null));
+                tokens.add(new JsonToken(c, null));
                 input = input.substring(1);
             } else {
                 throw new Exception(String.format("unexpected character: %s", c));
@@ -118,10 +110,8 @@ public class JsonLexer {
     }
 
     static boolean isNumber(char c) {
-        List<Integer> validNumbers = Arrays.asList(
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-
-        return validNumbers.contains(Character.getNumericValue(c));
+        return Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+            .contains(Character.getNumericValue(c));
     }
 
     static boolean isWhitespace(char c) {

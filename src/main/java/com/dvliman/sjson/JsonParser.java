@@ -12,26 +12,25 @@ public class JsonParser {
         if (first.matchCharacter(JsonToken.JSON_RIGHT_BRACKET))
             return newPair(result, removeFirst(tokens));
 
+        // parsing a, b, 1, {}, ..]
         while (true) {
 
-            // parse for element in array
+            // parse each element (value can be leaf, an array or object)
             Pair<Object, List<JsonToken>> pair = (Pair<Object, List<JsonToken>>) parse(tokens);
 
             // add element in resulting-array
             result.add(pair.getKey());
             tokens = pair.getValue();
 
-            // look for comma (prepare to parse the next element in array)
-            // if ], back out
+            // look for comma, continue parsing the rest
             JsonToken head = head(tokens);
 
-            if (head.matchCharacter(JsonToken.JSON_RIGHT_BRACKET)) {
+            if (head.matchCharacter(JsonToken.JSON_RIGHT_BRACKET))
                 return newPair(result, removeFirst(tokens));
 
-            } else if (!head.matchCharacter(JsonToken.JSON_COMMA)) {
+            if (!head.matchCharacter(JsonToken.JSON_COMMA))
                 throw new Exception(String.format("except comma after object in array, got: %s", head));
 
-            }
             tokens = removeFirst(tokens);
         }
     }
@@ -44,36 +43,33 @@ public class JsonParser {
         if (first.matchCharacter(JsonToken.JSON_RIGHT_CURLY_BRACKET))
             return newPair(result, removeFirst(tokens));
 
-        // parsing {"hello": "world"} or {"hello": <any>}
+        // parsing "hello": "world"} or {"hello": <any>}
         while (true) {
             // look for "hello"
             JsonToken jsonKey = head(tokens);
 
-            if (!jsonKey.type.equals(String.class))
+            if (!(jsonKey.value instanceof String))
                 throw new Exception(String.format("expect json-key as string, got: %s", jsonKey));
 
             tokens = removeFirst(tokens);
 
-            // look for :
-            if ((Character) tokens.get(0).value != JsonToken.JSON_COLON) {
+            // look for a colon
+            if (!head(tokens).matchCharacter(JsonToken.JSON_COLON))
                 throw new Exception(String.format("expect colon, got: %s", tokens.get(0).value));
-            }
 
-            // look for json pair value
-            Pair<Object, List<JsonToken>> pair = (Pair<Object, List<JsonToken>>)
-                parse(removeFirst(tokens));
+            // look for json pair value, could be <any>
+            Pair<Object, List<JsonToken>> pair = (Pair<Object, List<JsonToken>>) parse(removeFirst(tokens));
             result.put(jsonKey.value.toString(), pair.getKey());
 
-            // looking for } or ,
+            // look for a comma, continue parsing the rest of key-value pairs
             tokens = pair.getValue();
-            JsonToken head = tokens.get(0);
+            JsonToken head = head(tokens);
 
-            if (head.matchCharacter(JsonToken.JSON_RIGHT_CURLY_BRACKET)) {
+            if (head.matchCharacter(JsonToken.JSON_RIGHT_CURLY_BRACKET))
                 return newPair(result, removeFirst(tokens));
 
-            } else if (!head.matchCharacter(JsonToken.JSON_COMMA)) {
+            if (!head.matchCharacter(JsonToken.JSON_COMMA))
                 throw new Exception(String.format("except comma after json pair, got: %s", head));
-            }
 
             tokens = removeFirst(tokens);
         }
@@ -96,6 +92,7 @@ public class JsonParser {
 
     public static Object parseJson(List<JsonToken> tokens) throws Exception {
         Object result = parse(tokens);
+
         if (result == null)
             return null;
 

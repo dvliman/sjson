@@ -9,12 +9,11 @@ public class JsonToken {
     public static char JSON_LEFT_CURLY_BRACKET  = '{';
     public static char JSON_RIGHT_CURLY_BRACKET = '}';
 
-    Class type;
+    // Class type; we can keep track of value's type here
     Object value;
     String remaining;
 
-    public JsonToken(Class type, Object value, String remaining) {
-        this.type      = type;
+    public JsonToken(Object value, String remaining) {
         this.value     = value;
         this.remaining = remaining;
     }
