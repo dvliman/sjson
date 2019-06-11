@@ -10,18 +10,18 @@ There are two stages in parsing json:
         * note: token must be non-recursive
   2. syntactic analysis  
       * match groups of tokens according to the language grammar (see: [http://json.org/](http://json.org/))  
-      * to parse a json (see: [parse](https://github.com/dvliman/sjson/blob/master/src/main/java/com/dvliman/sjson/JsonParser.java#L78))  
+      * to parse a json (see: [parse](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/main/java/com/dvliman/sjson/JsonParser.java#L7))
         * check the first token
         * if first token is `{`, parse for object  
         * if first token is `[`, parse for array 
         * otherwise return first token, and the remaining tokens  
-      * to parse array (see: [parseArray](https://github.com/dvliman/sjson/blob/master/src/main/java/com/dvliman/sjson/JsonParser.java#L7))
+      * to parse array (see: [parseArray](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/main/java/com/dvliman/sjson/JsonParser.java#L31))
         * initialize resulting-array
         * call parse on each element
         * add to resulting-array
         * look for comma
         * repeat for remaining until it sees `]`
-      * to parse object (see: [parseObject](https://github.com/dvliman/sjson/blob/master/src/main/java/com/dvliman/sjson/JsonParser.java#L38)):
+      * to parse object (see: [parseObject](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/main/java/com/dvliman/sjson/JsonParser.java#L62))
         * initialize resulting-map  
         * look for first token (the key of the pair)
         * look for `:` 
@@ -44,14 +44,14 @@ System.out.println(result.get("hello")); // => "world"
 ```      
 
 See more examples on the test case:
-1. testLexer: parse tokens from input string
-2. testEmptyJson: parse empty json
-3. testJsonArray: parse top level json array
-4. testJsonObject: parse top level json object
-5. testJsonObjectArray: parse json array values
-6. testNestedJson: parse nested json object/array
-7. testInvalidJson: expect colon in json pair
-8. testInvalidJsonObjectKey: expect json field to be a string
+1. [testLexer](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/test/java/com/dvliman/sjson/JsonTest.java#L11): parse tokens from input string
+2. [testEmptyJson](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/test/java/com/dvliman/sjson/JsonTest.java#L27): parse empty json
+3. [testJsonArray](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/test/java/com/dvliman/sjson/JsonTest.java#L42): parse top level json array
+4. [testJsonObject](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/test/java/com/dvliman/sjson/JsonTest.java#L54): parse top level json object
+5. [testJsonObjectArray](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/test/java/com/dvliman/sjson/JsonTest.java#L63): parse json array values
+6. [testNestedJson](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/test/java/com/dvliman/sjson/JsonTest.java#L72): parse nested json object/array
+7. [testInvalidJson](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/test/java/com/dvliman/sjson/JsonTest.java#L82): expect colon in json pair
+8. [testInvalidJsonObjectKey](https://github.com/dvliman/sjson/blob/f19d9f0e1608866d970d85349ab23b7a9624fb20/src/test/java/com/dvliman/sjson/JsonTest.java#L88): expect json field to be a string
 note: run `mvn test` to run all the tests
 
 * TODO:
