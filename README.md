@@ -28,7 +28,7 @@ There are two stages in parsing json:
         * parse the value and set value on resulting-map
         * look for `,`
         * repeat for remaining key-value pairs until it sees `}`
-    * note: many implementations do a single-pass 
+      * note: many implementations do a single-pass 
 
 How to use this library:
 ```
