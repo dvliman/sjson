@@ -66,7 +66,7 @@ note: run `mvn test` to run all the tests
   * handle top-level scalars - RFC 7158
   
 * links:
-  * [stleary/JSON-java](https://github.com/stleary/JSON-java): sample implementation in java
+  * [stleary/JSON-java](https://github.com/stleary/JSON-java): reference implementation in java
   * [FasterXML/jackson](https://github.com/FasterXML/jackson): robust, supports many features
   * [ralfstx/minimal-json](https://github.com/ralfstx/minimal-json): very simple implementation with buffer and reader, as fast as Jackson with much less featuresets
   * [clojure/data.json](https://github.com/clojure/data.json): clojure implementation with `PushBackReader` allows you to 'un-see' character stream
