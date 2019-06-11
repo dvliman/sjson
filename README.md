@@ -1,5 +1,7 @@
 #### sjson: toy json parser in java
 
+Note: this project is only to answer "please articulate how you would write a simple json parser in java that reads a json string and transform into collections of java objects"
+
 There are two stages in parsing json: 
   1. lexical analysis (breaking down input string into tokens)
       * recognize certain character such as: `{`, `}`, `[`, `]`, `,`
