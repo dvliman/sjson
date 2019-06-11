@@ -86,7 +86,7 @@ public class JsonTest {
 
     @Test(expected = Exception.class)
     public void testInvalidJsonObjectKey() throws Exception {
-        String json = "{1 :\"world\"}"; // expecting colon
+        String json = "{1 :\"world\"}"; // json object field must be string
         JsonParser.parseJson(JsonLexer.tokens(json));
     }
 

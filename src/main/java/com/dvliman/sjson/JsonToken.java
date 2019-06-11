@@ -9,7 +9,7 @@ public class JsonToken {
     public static char JSON_LEFT_CURLY_BRACKET  = '{';
     public static char JSON_RIGHT_CURLY_BRACKET = '}';
 
-    // Class type; we can keep track of value's type here
+    // Class type; to keep track of value's type
     Object value;
     String remaining;
 

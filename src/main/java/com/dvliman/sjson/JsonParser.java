@@ -4,6 +4,30 @@ import javafx.util.Pair;
 import java.util.*;
 
 public class JsonParser {
+    public static Object parse(List<JsonToken> tokens) throws Exception {
+        if (tokens == null || tokens.isEmpty())
+            return null;
+
+        JsonToken first = head(tokens);
+
+        if (first.value.equals(JsonToken.JSON_LEFT_BRACKET))
+            return parseArray(removeFirst(tokens));
+
+        if (first.value.equals(JsonToken.JSON_LEFT_CURLY_BRACKET))
+            return parseObject(removeFirst(tokens));
+
+        return newPair(first, removeFirst(tokens));
+    }
+
+    public static Object parseJson(List<JsonToken> tokens) throws Exception {
+        Object result = parse(tokens);
+
+        if (result == null)
+            return null;
+
+        return ((Pair) result).getKey();
+    }
+
     public static Pair<List<Object>, List<JsonToken>> parseArray(List<JsonToken> tokens) throws Exception {
         ArrayList<Object> result = new ArrayList();
 
@@ -57,7 +81,7 @@ public class JsonParser {
             if (!head(tokens).matchCharacter(JsonToken.JSON_COLON))
                 throw new Exception(String.format("expect colon, got: %s", tokens.get(0).value));
 
-            // look for json pair value, could be <any>
+            // look for (parse) json pair value, could be <any>
             Pair<Object, List<JsonToken>> pair = (Pair<Object, List<JsonToken>>) parse(removeFirst(tokens));
             result.put(jsonKey.value.toString(), pair.getKey());
 
@@ -73,30 +97,6 @@ public class JsonParser {
 
             tokens = removeFirst(tokens);
         }
-    }
-
-    public static Object parse(List<JsonToken> tokens) throws Exception {
-        if (tokens == null || tokens.isEmpty())
-            return null;
-
-        JsonToken first = head(tokens);
-
-        if (first.value.equals(JsonToken.JSON_LEFT_BRACKET))
-            return parseArray(removeFirst(tokens));
-
-        if (first.value.equals(JsonToken.JSON_LEFT_CURLY_BRACKET))
-            return parseObject(removeFirst(tokens));
-
-        return newPair(first, removeFirst(tokens));
-    }
-
-    public static Object parseJson(List<JsonToken> tokens) throws Exception {
-        Object result = parse(tokens);
-
-        if (result == null)
-            return null;
-
-        return ((Pair) result).getKey();
     }
 
     static Pair<Map<String, Object>, List<JsonToken>> newPair(Map<String, Object> map, List<JsonToken> tokens) {

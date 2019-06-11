@@ -3,89 +3,34 @@ package com.dvliman.sjson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class JsonLexer {
-    static JsonToken jsonString(String input) {
-        String jsonString = "";
-
-        if (input.charAt(0) != JsonToken.JSON_QUOTE)
-            return null;
-
-        input = input.substring(1); // remove first quote
-        for (char c: input.toCharArray()) {
-            if (c == JsonToken.JSON_QUOTE) {
-                String remaining = input.substring(jsonString.length() + 1);
-                return new JsonToken(jsonString, remaining);
-            }
-            jsonString += c;
-        }
-
-        return null;
-    }
-
-    static JsonToken jsonNumber(String input) {
-        String jsonNumber = "";
-
-        for (char c: input.toCharArray()) {
-            if (isNumber(c)) {
-                jsonNumber += c;
-            } else {
-                break;
-            }
-        }
-
-        if (jsonNumber == "")
-            return null;
-
-        return new JsonToken(
-            Integer.parseInt(jsonNumber),
-            input.substring(jsonNumber.length()));
-    }
-
-    static JsonToken jsonBoolean(String input) {
-        if (input == "true")
-            return new JsonToken(true, input.substring(input.length()));
-
-        if (input == "false")
-            return new JsonToken(false, input.substring(input.length()));
-
-        return null;
-    }
-
-    static JsonToken jsonNull(String input) {
-        if (input == "null")
-            return new JsonToken(null, input.substring(input.length()));
-
-        return null;
-    }
-
-    static List<JsonToken> tokens(String input) throws Exception {
+    public static List<JsonToken> tokens(String input) throws Exception {
         ArrayList<JsonToken> tokens = new ArrayList();
 
         while (input.length() > 0) {
-            JsonToken t1 = jsonString(input);
+            JsonToken t1 = maybeString(input);
             if (t1 != null) {
                 tokens.add(t1);
                 input = t1.remaining;
                 continue;
             }
 
-            JsonToken t2 = jsonNumber(input);
+            JsonToken t2 = maybeNumber(input);
             if (t2 != null) {
                 tokens.add(t2);
                 input = t2.remaining;
                 continue;
             }
 
-            JsonToken t3 = jsonBoolean(input);
+            JsonToken t3 = maybeBoolean(input);
             if (t3 != null) {
                 tokens.add(t3);
                 input = t3.remaining;
                 continue;
             }
 
-            JsonToken t4 = jsonNull(input);
+            JsonToken t4 = maybeNull(input);
             if (t4 != null) {
                 tokens.add(t4);
                 input = t4.remaining;
@@ -107,6 +52,60 @@ public class JsonLexer {
         }
 
         return tokens;
+    }
+
+    static JsonToken maybeString(String input) {
+        String jsonString = "";
+
+        if (input.charAt(0) != JsonToken.JSON_QUOTE)
+            return null;
+
+        input = input.substring(1); // remove first quote
+        for (char c: input.toCharArray()) {
+            if (c == JsonToken.JSON_QUOTE) {
+                String remaining = input.substring(jsonString.length() + 1);
+                return new JsonToken(jsonString, remaining);
+            }
+            jsonString += c;
+        }
+
+        return null;
+    }
+
+    static JsonToken maybeNumber(String input) {
+        String jsonNumber = "";
+
+        for (char c: input.toCharArray()) {
+            if (isNumber(c)) {
+                jsonNumber += c;
+            } else {
+                break;
+            }
+        }
+
+        if (jsonNumber == "")
+            return null;
+
+        return new JsonToken(
+            Integer.parseInt(jsonNumber),
+            input.substring(jsonNumber.length()));
+    }
+
+    static JsonToken maybeBoolean(String input) {
+        if (input == "true")
+            return new JsonToken(true, input.substring(input.length()));
+
+        if (input == "false")
+            return new JsonToken(false, input.substring(input.length()));
+
+        return null;
+    }
+
+    static JsonToken maybeNull(String input) {
+        if (input == "null")
+            return new JsonToken(null, input.substring(input.length()));
+
+        return null;
     }
 
     static boolean isNumber(char c) {

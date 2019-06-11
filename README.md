@@ -13,15 +13,15 @@ There are two stages in parsing json:
       * to parse a json (see: [parse](https://github.com/dvliman/sjson/blob/master/src/main/java/com/dvliman/sjson/JsonParser.java#L78))  
         * check the first token
         * if first token is `{`, parse for object  
-        * if first token is `]`, parse for array 
+        * if first token is `[`, parse for array 
         * otherwise return first token, and the remaining tokens  
-      * to parse array (see: [parseObject](https://github.com/dvliman/sjson/blob/master/src/main/java/com/dvliman/sjson/JsonParser.java#L38)):
+      * to parse array (see: [parseArray](https://github.com/dvliman/sjson/blob/master/src/main/java/com/dvliman/sjson/JsonParser.java#L7))
         * initialize resulting-array
         * call parse on each element
         * add to resulting-array
         * look for comma
         * repeat for remaining until it sees `]`
-      * to parse object (see: [parseArray](https://github.com/dvliman/sjson/blob/master/src/main/java/com/dvliman/sjson/JsonParser.java#L7))
+      * to parse object (see: [parseObject](https://github.com/dvliman/sjson/blob/master/src/main/java/com/dvliman/sjson/JsonParser.java#L38)):
         * initialize resulting-map  
         * look for first token (the key of the pair)
         * look for `:` 
@@ -29,13 +29,39 @@ There are two stages in parsing json:
         * look for `,`
         * repeat for remaining key-value pairs until it sees `}`
     * note: many implementations do a single-pass 
-      
+
+How to use this library:
+```
+import com.dvliman.sjson.JsonLexer;
+import com.dvliman.sjson.JsonParser;
+
+String json = "{\"hello\": \"world\"}";
+
+Object result = JsonParser.parseJson(JsonLexer.tokens(json));
+HashMap<String, Object> map = (HashMap) result;
+System.out.println(result.get("hello")); // => "world"
+        
+```      
+
+See more examples on the test case:
+1. testLexer: parse tokens from input string
+2. testEmptyJson: parse empty json
+3. testJsonArray: parse top level json array
+4. testJsonObject: parse top level json object
+5. testJsonObjectArray: parse json array values
+6. testNestedJson: parse nested json object/array
+7. testInvalidJson: expect colon in json pair
+8. testInvalidJsonObjectKey: expect json field to be a string
+note: run `mvn test` to run all the tests
+
 * TODO:
   * handle unicode characters
   * handle escape characters
   * parse number with precision
   * use `Reader` or `PushBackReader` for streaming characters
   * define type container for `JsonArray`, `JsonObject`, `JsonValue`, primitives and so on
+  * handle edge cases (see: [Parsing JSON is a minefield](http://seriot.ch/parsing_json.php))  
+  * handle top-level scalars - RFC 7158
   
 * links:
   * [stleary/JSON-java](https://github.com/stleary/JSON-java): sample implementation in java
